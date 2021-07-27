@@ -12,7 +12,7 @@ using namespace std;
 vector<string> solver(vector<vector<char>> chars, int x, int y, int x_dir, int y_dir, int current_letter_pos, vector<string> possible_words)
 {
     vector<string> solutions;
-    if (x < 0 && y < 0 || x == chars[0].size() || y == chars.size()) return solutions;
+    if (x < 0 || y < 0 || x == chars[0].size() || y == chars.size()) return solutions;
     int i = possible_words.size();
     while (--i > -1)
     {
@@ -92,6 +92,11 @@ int main()
         for (int x = 0; x < chars[0].size(); x++)
         {
             solveCharDirection(chars, x, y, 0, 1, words);
+            solveCharDirection(chars, x, y, 1, 0, words);
+            solveCharDirection(chars, x, y, 1, 1, words);
+            solveCharDirection(chars, x, y, 0, -1, words);
+            solveCharDirection(chars, x, y, -1, 0, words);
+            solveCharDirection(chars, x, y, -1, -1, words);
 
         }
         cout << endl;
