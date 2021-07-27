@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+*.db
+*.tlog
+*.log
+*.pdb
+*.idb
+*.filters
+*.user
+*.vcxproj
+*.ipch
+.vs/WordSearchKata/v16/.suo
+.vs/WordSearchKata/v16/Browse.VC.opendb
+*.ilk
+*.sln
