@@ -1,6 +1,5 @@
 // WordSearchKata.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -8,8 +7,7 @@
 #include <string>
 using namespace std;
 
-
-
+//x and y correspond to the letter the solver is starting from, x_dir and y_dir are how much those coordinates are incremented to get to the next letter
 vector<string> solver(vector<vector<char>> chars, int x, int y, int x_dir, int y_dir, int current_letter_pos, vector<string> possible_words)
 {
     vector<string> solutions;
@@ -19,12 +17,12 @@ vector<string> solver(vector<vector<char>> chars, int x, int y, int x_dir, int y
     {
         if(possible_words[i][current_letter_pos] != chars[y][x])
         {
-            possible_words.erase(possible_words.begin() + i);
+            possible_words.erase(possible_words.begin() + i); //remove word from consideration in future iterations of recursive loop if not a possible answer
         }
         else if(possible_words[i].length() == current_letter_pos + 1)
         {
             solutions.push_back(possible_words[i]);
-            possible_words.erase(possible_words.begin() + i);
+            possible_words.erase(possible_words.begin() + i); //remove word from consideration in future iterations of recursive loop if already a known answer
 
         }
     }
@@ -36,8 +34,8 @@ vector<string> solver(vector<vector<char>> chars, int x, int y, int x_dir, int y
 struct wordCoords
 {
     string word;
-    int x_start;
-    int y_start;
+    int x;
+    int y;
     int x_dir;
     int y_dir;
 };
@@ -49,8 +47,8 @@ vector<wordCoords> solveCharDirection(vector<vector<char>> chars, int x, int y, 
     {
         wordCoords word_coord;
         word_coord.word = solutions[i];
-        word_coord.x_start = x;
-        word_coord.y_start = y;
+        word_coord.x = x;
+        word_coord.y = y;
         word_coord.x_dir = x_dir;
         word_coord.y_dir = y_dir;
         solutionCoords.push_back(word_coord);
@@ -67,7 +65,7 @@ int main()
     vector<string> words;
     vector<vector<char>> chars;
     bool first_run = true;
-    inputfile.open("test2.txt");
+    inputfile.open("test3.txt");
 
     string word;
 
@@ -103,19 +101,19 @@ int main()
     //}
 
     vector<wordCoords> solutionCoords;
-
     for (int y = 0; y < chars.size(); y++)
     {
         for (int x = 0; x < chars[0].size(); x++)
         {
+            //solves clockwise starting from 12 o'clock position
             vector<wordCoords>s1 = solveCharDirection(chars, x, y, 0, 1, words);
-            vector<wordCoords>s2 = solveCharDirection(chars, x, y, 1, 0, words);
-            vector<wordCoords>s3 = solveCharDirection(chars, x, y, 1, 1, words);
-            vector<wordCoords>s4 = solveCharDirection(chars, x, y, -1, 1, words);
-            vector<wordCoords>s5 = solveCharDirection(chars, x, y, 1, -1, words);
-            vector<wordCoords>s6 = solveCharDirection(chars, x, y, 0, -1, words);
+            vector<wordCoords>s2 = solveCharDirection(chars, x, y, 1, 1, words);
+            vector<wordCoords>s3 = solveCharDirection(chars, x, y, 1, 0, words);
+            vector<wordCoords>s4 = solveCharDirection(chars, x, y, 1, -1, words);
+            vector<wordCoords>s5 = solveCharDirection(chars, x, y, 0, -1, words);
+            vector<wordCoords>s6 = solveCharDirection(chars, x, y, -1, -1, words);
             vector<wordCoords>s7 = solveCharDirection(chars, x, y, -1, 0, words);
-            vector<wordCoords>s8 = solveCharDirection(chars, x, y, -1, -1, words);
+            vector<wordCoords>s8 = solveCharDirection(chars, x, y, -1, 1, words);
             solutionCoords.insert(solutionCoords.end(), s1.begin(), s1.end());
             solutionCoords.insert(solutionCoords.end(), s2.begin(), s2.end());
             solutionCoords.insert(solutionCoords.end(), s3.begin(), s3.end());
@@ -124,7 +122,6 @@ int main()
             solutionCoords.insert(solutionCoords.end(), s6.begin(), s6.end());
             solutionCoords.insert(solutionCoords.end(), s7.begin(), s7.end());
             solutionCoords.insert(solutionCoords.end(), s8.begin(), s8.end());
-
         }
     }
 
@@ -137,7 +134,7 @@ int main()
                 cout << solutionCoords[i].word << ": ";
                 for (int c = 0; c < solutionCoords[i].word.length(); c++)
                 {
-                    cout << "(" << solutionCoords[i].x_start + solutionCoords[i].x_dir * c << "," << solutionCoords[i].y_start + solutionCoords[i].y_dir * c;
+                    cout << "(" << solutionCoords[i].x + solutionCoords[i].x_dir * c << "," << solutionCoords[i].y + solutionCoords[i].y_dir * c;
                     if (c == solutionCoords[i].word.length() - 1) cout << ")";
                     else cout << "),";
                 }
