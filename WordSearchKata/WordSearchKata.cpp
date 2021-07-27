@@ -9,6 +9,7 @@
 using namespace std;
 
 
+
 vector<string> solver(vector<vector<char>> chars, int x, int y, int x_dir, int y_dir, int current_letter_pos, vector<string> possible_words)
 {
     vector<string> solutions;
@@ -31,18 +32,31 @@ vector<string> solver(vector<vector<char>> chars, int x, int y, int x_dir, int y
     solutions.insert(solutions.end(), further_possible_solutions.begin(), further_possible_solutions.end());
     return solutions;
 }
-void solveCharDirection(vector<vector<char>> chars, int x, int y, int x_dir, int y_dir, vector<string> words)
+
+struct wordCoords
+{
+    string word;
+    int x_start;
+    int y_start;
+    int x_dir;
+    int y_dir;
+};
+vector<wordCoords> solveCharDirection(vector<vector<char>> chars, int x, int y, int x_dir, int y_dir, vector<string> words)
 {
     vector<string> solutions = solver(chars, x, y, x_dir, y_dir, 0, words);
+    vector<wordCoords> solutionCoords;
     for (int i = 0; i < solutions.size(); i++)
     {
-        cout << solutions[i] << ": ";
-        for (int c = 0; c < solutions[i].length(); c++)
-        {
-            cout << "(" << x + x_dir * c << "," << y + y_dir * c << ")";
-        }
-        cout << endl;
+        wordCoords word_coord;
+        word_coord.word = solutions[i];
+        word_coord.x_start = x;
+        word_coord.y_start = y;
+        word_coord.x_dir = x_dir;
+        word_coord.y_dir = y_dir;
+        solutionCoords.push_back(word_coord);
+       
     }
+    return solutionCoords;
 }
 
 int main()
@@ -53,7 +67,7 @@ int main()
     vector<string> words;
     vector<vector<char>> chars;
     bool first_run = true;
-    inputfile.open("test1.txt");
+    inputfile.open("test2.txt");
 
     string word;
 
@@ -78,31 +92,60 @@ int main()
         }
 
     }
+    inputfile.close();
+    //for (int i = 0; i < chars.size(); i++)
+    //{
+    //    for (int c = 0; c < chars[0].size(); c++)
+    //    {
+    //        cout << chars[i][c];
+    //    }
+    //    cout << endl;
+    //}
 
-    for (int i = 0; i < chars.size(); i++)
-    {
-        for (int c = 0; c < chars[0].size(); c++)
-        {
-            cout << chars[i][c];
-        }
-        cout << endl;
-    }
+    vector<wordCoords> solutionCoords;
+
     for (int y = 0; y < chars.size(); y++)
     {
         for (int x = 0; x < chars[0].size(); x++)
         {
-            solveCharDirection(chars, x, y, 0, 1, words);
-            solveCharDirection(chars, x, y, 1, 0, words);
-            solveCharDirection(chars, x, y, 1, 1, words);
-            solveCharDirection(chars, x, y, 0, -1, words);
-            solveCharDirection(chars, x, y, -1, 0, words);
-            solveCharDirection(chars, x, y, -1, -1, words);
+            vector<wordCoords>s1 = solveCharDirection(chars, x, y, 0, 1, words);
+            vector<wordCoords>s2 = solveCharDirection(chars, x, y, 1, 0, words);
+            vector<wordCoords>s3 = solveCharDirection(chars, x, y, 1, 1, words);
+            vector<wordCoords>s4 = solveCharDirection(chars, x, y, -1, 1, words);
+            vector<wordCoords>s5 = solveCharDirection(chars, x, y, 1, -1, words);
+            vector<wordCoords>s6 = solveCharDirection(chars, x, y, 0, -1, words);
+            vector<wordCoords>s7 = solveCharDirection(chars, x, y, -1, 0, words);
+            vector<wordCoords>s8 = solveCharDirection(chars, x, y, -1, -1, words);
+            solutionCoords.insert(solutionCoords.end(), s1.begin(), s1.end());
+            solutionCoords.insert(solutionCoords.end(), s2.begin(), s2.end());
+            solutionCoords.insert(solutionCoords.end(), s3.begin(), s3.end());
+            solutionCoords.insert(solutionCoords.end(), s4.begin(), s4.end());
+            solutionCoords.insert(solutionCoords.end(), s5.begin(), s5.end());
+            solutionCoords.insert(solutionCoords.end(), s6.begin(), s6.end());
+            solutionCoords.insert(solutionCoords.end(), s7.begin(), s7.end());
+            solutionCoords.insert(solutionCoords.end(), s8.begin(), s8.end());
 
         }
-        cout << endl;
     }
 
-    inputfile.close();
+    
+    for (int n = 0; n < words.size(); n++)
+    {
+        for (int i = 0; i < solutionCoords.size(); i++)
+        {
+            if (words[n] == solutionCoords[i].word) {
+                cout << solutionCoords[i].word << ": ";
+                for (int c = 0; c < solutionCoords[i].word.length(); c++)
+                {
+                    cout << "(" << solutionCoords[i].x_start + solutionCoords[i].x_dir * c << "," << solutionCoords[i].y_start + solutionCoords[i].y_dir * c;
+                    if (c == solutionCoords[i].word.length() - 1) cout << ")";
+                    else cout << "),";
+                }
+                cout << endl;
+                continue;
+            }
+        }
+    }
 
    return 0;
 }
