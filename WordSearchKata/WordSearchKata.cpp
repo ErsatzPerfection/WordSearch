@@ -1,10 +1,8 @@
-// WordSearchKata.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <sstream>
-#include <string>
+//#include <string>
 using namespace std;
 
 //x and y correspond to the letter the solver is starting from, x_dir and y_dir are how much those coordinates are incremented to get to the next letter
@@ -21,7 +19,7 @@ vector<string> solver(vector<vector<char>> chars, int x, int y, int x_dir, int y
         }
         else if(possible_words[i].length() == current_letter_pos + 1)
         {
-            solutions.push_back(possible_words[i]);
+            solutions.push_back(possible_words[i]); //add solution to vector of words that can be found in this direction with this starting point
             possible_words.erase(possible_words.begin() + i); //remove word from consideration in future iterations of recursive loop if already a known answer
 
         }
@@ -57,15 +55,20 @@ vector<wordCoords> solveCharDirection(vector<vector<char>> chars, int x, int y, 
     return solutionCoords;
 }
 
-int main()
+int main(int argc, char** argv)
 {
-
+    string filename;
+    if (argc > 1) filename = argv[1];
+    else {
+        cout << "Please enter name of input file" << endl;
+        cin >> filename;
+    }
     ifstream inputfile;
     string input_line;
     vector<string> words;
     vector<vector<char>> chars;
     bool first_run = true;
-    inputfile.open("test3.txt");
+    inputfile.open(filename);
 
     string word;
 
@@ -91,14 +94,6 @@ int main()
 
     }
     inputfile.close();
-    //for (int i = 0; i < chars.size(); i++)
-    //{
-    //    for (int c = 0; c < chars[0].size(); c++)
-    //    {
-    //        cout << chars[i][c];
-    //    }
-    //    cout << endl;
-    //}
 
     vector<wordCoords> solutionCoords;
     for (int y = 0; y < chars.size(); y++)
@@ -147,13 +142,3 @@ int main()
    return 0;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files 
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
