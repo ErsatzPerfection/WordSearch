@@ -12,3 +12,4 @@ This uses only standard libraries and as such should be buildable with any C++ c
 
 Once built to run the program simply call the program with the name of the text file to solve for as an argument:
 	
+Alternatively if no argument is provided the program will ask for the name of the input file.
