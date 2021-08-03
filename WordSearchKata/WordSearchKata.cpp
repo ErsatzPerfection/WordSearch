@@ -60,7 +60,7 @@ int main(int argc, char** argv)
     string filename;
     if (argc > 1) filename = argv[1];
     else {
-        cout << "Please enter name of input file" << endl;
+        cout << "Please enter name of input file" << '\n';
         cin >> filename;
     }
     ifstream inputfile;
@@ -71,7 +71,6 @@ int main(int argc, char** argv)
     inputfile.open(filename);
 
     string word;
-
     while (getline(inputfile, input_line,'\n'))
     {
         stringstream current_line(input_line);
@@ -79,7 +78,10 @@ int main(int argc, char** argv)
         char c;
         if (first_run)
         {
-            while (getline(current_line, word, ',')) words.push_back(word);
+            while (getline(current_line, word, ',')) {
+                for (int i = 0; i < word.size(); i++) if (word[i] < 'A' || word[i] > 'Z') word.erase(i, 1); //sanitize words to prevent unexpected behavior
+                words.push_back(word);
+            }
             first_run = false;
         }
         else 
@@ -94,7 +96,6 @@ int main(int argc, char** argv)
 
     }
     inputfile.close();
-
     vector<wordCoords> solutionCoords;
     for (int y = 0; y < chars.size(); y++)
     {
@@ -119,13 +120,14 @@ int main(int argc, char** argv)
             solutionCoords.insert(solutionCoords.end(), s8.begin(), s8.end());
         }
     }
-
     
     for (int n = 0; n < words.size(); n++)
     {
+        int d = 0;
         for (int i = 0; i < solutionCoords.size(); i++)
         {
             if (words[n] == solutionCoords[i].word) {
+                if (d++ > 0) cout << '\n';
                 cout << solutionCoords[i].word << ": ";
                 for (int c = 0; c < solutionCoords[i].word.length(); c++)
                 {
@@ -133,10 +135,9 @@ int main(int argc, char** argv)
                     if (c == solutionCoords[i].word.length() - 1) cout << ")";
                     else cout << "),";
                 }
-                cout << endl;
-                continue;
             }
         }
+        if(n < words.size()-1) cout << '\n';
     }
 
    return 0;
